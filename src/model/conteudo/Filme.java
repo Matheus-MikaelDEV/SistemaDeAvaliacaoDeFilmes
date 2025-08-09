@@ -1,0 +1,26 @@
+package model.conteudo;
+
+import java.time.LocalDate;
+
+public class Filme extends Conteudo{
+    private int duracaoEmMinutos;
+
+    public Filme(String tipoConteudo, String titulo, LocalDate anoLancamento, String genero, String sinopse, int duracaoEmMinutos) {
+        super(tipoConteudo, titulo, anoLancamento, genero, sinopse);
+        this.duracaoEmMinutos = duracaoEmMinutos;
+    }
+
+    public int getDuracaoEmMinutos() {
+        return duracaoEmMinutos;
+    }
+
+    @Override
+    public void exibirDetalhes() {
+        System.out.println("Filme: " + getTitulo());
+        System.out.println("Ano de Lançamento: " + getAnoLancamento());
+        System.out.println("Gênero: " + getGenero());
+        System.out.println("Sinopse: " + getSinopse());
+        System.out.println("Duração: " + duracaoEmMinutos + " minutos");
+    }
+
+}
