@@ -1,5 +1,6 @@
 package sistema;
 
+import model.avaliacao.Avaliacao;
 import model.conteudo.Conteudo;
 import model.conteudo.Filme;
 import model.usuarios.Admin;
@@ -8,6 +9,7 @@ import model.usuarios.Usuario;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -30,12 +32,20 @@ public class Sistema {
             while ((linha = br.readLine()) != null) {
                 String[] vetor = linha.split(",");
 
-                LocalDate data = LocalDate.parse(vetor[2]);
-                int duracao = Integer.parseInt(vetor[5]);
-
                 if (vetor[0].equals("Filme")) {
-                    Conteudo filme = new Filme(vetor[0], vetor[1], data, vetor[3], vetor[4],  duracao);
+                    Filme filme = new Filme(Integer.parseInt(vetor[1]), vetor[0], vetor[2], LocalDate.parse(vetor[3], DateTimeFormatter.ofPattern("dd/MM/yyyy")), vetor[4], vetor[5], Integer.parseInt(vetor[6]));
                     conteudos.add(filme);
+
+                } else if (vetor[0].equals("Serie")) {
+
+                } else {
+                   Avaliacao avaliacao = new Avaliacao(vetor[0], Integer.parseInt(vetor[1]), vetor[2], vetor[3]);
+
+                   for (Conteudo conteudo : conteudos) {
+                       if(conteudo.getTitulo().equals(vetor[0])){
+                           conteudo.adicionarAvaliacao(avaliacao);
+                       }
+                   }
                 }
             }
         } catch (IOException e) {
@@ -128,7 +138,7 @@ public class Sistema {
             System.out.println("Tipo de usuário inválido!");
         }
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("usuarios.txt", true))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("usuarios.txt"))) {
             if (tipo.equals("adm")) {
                 bw.write("Admin," + nome + "," + email + "," + senha);
                 bw.newLine();
@@ -181,6 +191,48 @@ public class Sistema {
     }
 
     public void addConteudo() {
+        try {
+            System.out.print("Filme ou sério(f/s)? ");
+            String tipo = sc.nextLine();
 
+            if (tipo.equals("f")) {
+                System.out.print("Título: ");
+                String titulo = sc.nextLine();
+                System.out.print("Ano de lançamento(dd/MM/yyyy): ");
+                LocalDate anoLancamento = LocalDate.parse(sc.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                System.out.print("Gênero: ");
+                String genero = sc.nextLine();
+                System.out.print("Sinopse: ");
+                String sinopse = sc.nextLine();
+                System.out.print("Duração: ");
+                int duracao = sc.nextInt();
+                sc.nextLine();
+
+                Filme filme = new Filme(conteudos.size() + 1, tipo, titulo, anoLancamento, genero, sinopse, duracao);
+                conteudos.add(filme);
+            } else if (tipo.equals("s")) {
+
+            } else {
+                System.out.println("Tipo de conteúdo inválido!");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Algum valor inserido é inválido!");
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("conteudos.txt"))) {
+            for (Conteudo conteudo : conteudos) {
+                if (conteudo instanceof Filme) {
+                    Filme filme = (Filme) conteudo;
+                    bw.write("Filme," + filme.getId() + "," + filme.getTitulo() + "," + filme.getAnoLancamento() + "," + filme.getGenero() + "," + filme.getSinopse() + "," + filme.getDuracaoEmMinutos());
+                    bw.newLine();
+                }
+
+                for (Avaliacao avaliacao : conteudo.getAvaliacoes()) {
+                    bw.write(conteudo.getTitulo() + "," + avaliacao.getNomeDoAutor() + "," + avaliacao.getNota() + "," + avaliacao.getComentario() + "," + avaliacao.getEmailDoAutor());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao escrever no arquivo!");
+        }
     }
 }

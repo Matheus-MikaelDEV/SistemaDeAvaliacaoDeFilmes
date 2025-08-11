@@ -37,7 +37,7 @@ public class Main {
                             do {
                                 try {
                                     System.out.println("Menu de Administração: ");
-                                    System.out.print("1 - Listar Usuários\n2 - Excluir Usuário\n3 - Adicionar Filme\n4 - Remover Filme\nEscolha: ");
+                                    System.out.print("1 - Listar Usuários\n2 - Excluir Usuário\n3 - Adicionar Conteúdo\n4 - Remover Conteúdo\n5 - Sair\nEscolha: ");
                                     option2 = sc.nextInt();
                                 } catch (InputMismatchException e) {
                                     e.printStackTrace();
@@ -52,15 +52,18 @@ public class Main {
                                     case 2:
                                         break;
                                     case 3:
+                                        sistema.addConteudo();
                                         break;
                                     case 4:
+                                        break;
+                                    case 5:
                                         break;
                                     default:
                                         System.out.println("Opção inválida!");
                                         break;
                                 }
 
-                            } while (option2 != 4);
+                            } while (option2 != 5);
                         }
                     }
 

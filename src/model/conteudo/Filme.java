@@ -1,12 +1,15 @@
 package model.conteudo;
 
+import model.avaliacao.Avaliacao;
+
 import java.time.LocalDate;
+import java.util.List;
 
 public class Filme extends Conteudo{
     private int duracaoEmMinutos;
 
-    public Filme(String tipoConteudo, String titulo, LocalDate anoLancamento, String genero, String sinopse, int duracaoEmMinutos) {
-        super(tipoConteudo, titulo, anoLancamento, genero, sinopse);
+    public Filme(int id, String tipoConteudo, String titulo, LocalDate anoLancamento, String genero, String sinopse, int duracaoEmMinutos) {
+        super(id, tipoConteudo, titulo, anoLancamento, genero, sinopse);
         this.duracaoEmMinutos = duracaoEmMinutos;
     }
 

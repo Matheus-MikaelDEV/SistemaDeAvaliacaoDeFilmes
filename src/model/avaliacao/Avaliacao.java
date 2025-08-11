@@ -16,4 +16,20 @@ public class Avaliacao {
     public void getInfo() {
         System.out.println("Nome: " + nomeDoAutor + " - Nota: " + nota + " ★\nComentário: " + comentario);
     }
+
+    public String getNomeDoAutor() {
+        return nomeDoAutor;
+    }
+
+    public int getNota() {
+        return nota;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public String getEmailDoAutor() {
+        return emailDoAutor;
+    }
 }
