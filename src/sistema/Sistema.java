@@ -30,16 +30,16 @@ public class Sistema {
             String linha;
 
             while ((linha = br.readLine()) != null) {
-                String[] vetor = linha.split(",");
+                String[] vetor = linha.split("//");
 
                 if (vetor[0].equals("Filme")) {
-                    Filme filme = new Filme(Integer.parseInt(vetor[1]), vetor[0], vetor[2], LocalDate.parse(vetor[3], DateTimeFormatter.ofPattern("dd/MM/yyyy")), vetor[4], vetor[5], Integer.parseInt(vetor[6]));
+                    Filme filme = new Filme(Integer.parseInt(vetor[1]), vetor[0], vetor[2], LocalDate.parse(vetor[3]), vetor[4], vetor[5], Integer.parseInt(vetor[6]));
                     conteudos.add(filme);
 
                 } else if (vetor[0].equals("Serie")) {
 
                 } else {
-                   Avaliacao avaliacao = new Avaliacao(vetor[0], Integer.parseInt(vetor[1]), vetor[2], vetor[3]);
+                   Avaliacao avaliacao = new Avaliacao(vetor[1], Integer.parseInt(vetor[2]), vetor[3], vetor[4]);
 
                    for (Conteudo conteudo : conteudos) {
                        if(conteudo.getTitulo().equals(vetor[0])){
@@ -138,7 +138,7 @@ public class Sistema {
             System.out.println("Tipo de usuário inválido!");
         }
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("usuarios.txt"))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("usuarios.txt", true))) {
             if (tipo.equals("adm")) {
                 bw.write("Admin," + nome + "," + email + "," + senha);
                 bw.newLine();
@@ -223,16 +223,77 @@ public class Sistema {
             for (Conteudo conteudo : conteudos) {
                 if (conteudo instanceof Filme) {
                     Filme filme = (Filme) conteudo;
-                    bw.write("Filme," + filme.getId() + "," + filme.getTitulo() + "," + filme.getAnoLancamento() + "," + filme.getGenero() + "," + filme.getSinopse() + "," + filme.getDuracaoEmMinutos());
+                    bw.write("Filme//" + filme.getId() + "//" + filme.getTitulo() + "//" + filme.getAnoLancamento() + "//" + filme.getGenero() + "//" + filme.getSinopse() + "//" + filme.getDuracaoEmMinutos());
                     bw.newLine();
                 }
 
                 for (Avaliacao avaliacao : conteudo.getAvaliacoes()) {
-                    bw.write(conteudo.getTitulo() + "," + avaliacao.getNomeDoAutor() + "," + avaliacao.getNota() + "," + avaliacao.getComentario() + "," + avaliacao.getEmailDoAutor());
+                    bw.write(conteudo.getTitulo() + "//" + avaliacao.getNomeDoAutor() + "//" + avaliacao.getNota() + "//" + avaliacao.getComentario() + "//" + avaliacao.getEmailDoAutor());
                 }
             }
         } catch (IOException e) {
             System.out.println("Erro ao escrever no arquivo!");
+        }
+    }
+
+    public void addAvaliacao() {
+        if (conteudos.isEmpty()) {
+            System.out.println("Não há conteúdos cadastrados!");
+        } else {
+            System.out.print("Título do conteúdo: ");
+            String titulo = sc.nextLine();
+
+            for (Conteudo conteudo : conteudos) {
+                if (conteudo.getTitulo().equalsIgnoreCase(titulo)) {
+                    try {
+                        System.out.print("Qual a nota(1 a 10)? ");
+                        int nota = sc.nextInt();
+                        sc.nextLine();
+                        System.out.print("Comentário: ");
+                        String comentario = sc.nextLine();
+
+                        Avaliacao avaliacao = new Avaliacao(usuarioLogado.getNome(), nota, comentario, usuarioLogado.getEmail());
+                        conteudo.adicionarAvaliacao(avaliacao);
+                        System.out.println("Avaliação adicionada!");
+
+                        try (BufferedWriter bw = new BufferedWriter(new FileWriter("conteudos.txt"))) {
+                            for (Conteudo conteudo2 : conteudos) {
+                                if (conteudo instanceof Filme) {
+                                    Filme filme = (Filme) conteudo2;
+                                    bw.write("Filme," + filme.getId() + "//" + filme.getTitulo() + "//" + filme.getAnoLancamento() + "//" + filme.getGenero() + "//" + filme.getSinopse() + "//" + filme.getDuracaoEmMinutos());
+                                    bw.newLine();
+                                }
+
+                                for (Avaliacao avaliacao2 : conteudo.getAvaliacoes()) {
+                                    bw.write(conteudo2.getTitulo() + "//" + avaliacao2.getNomeDoAutor() + "//" + avaliacao2.getNota() + "//" + avaliacao2.getComentario() + "//" + avaliacao2.getEmailDoAutor());
+                                }
+                            }
+                        } catch (IOException e) {
+                            System.out.println("Erro ao escrever no arquivo!");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Nota inválida!");
+                        sc.nextLine();
+                    }
+                } else {
+                    System.out.println("Não há conteúdo com esse nome!");
+                }
+            }
+        }
+    }
+
+    public void listarTudo() {
+        if (conteudos.isEmpty()) {
+            System.out.println("Não há conteúdos cadastrados!");
+        } else {
+            for (Conteudo conteudo : conteudos) {
+                System.out.println("--------------------------");
+                conteudo.exibirDetalhes();
+                for (Avaliacao avaliacao : conteudo.getAvaliacoes()) {
+                    avaliacao.getInfo();
+                }
+                System.out.println("--------------------------");
+            }
         }
     }
 }

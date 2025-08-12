@@ -1,9 +1,6 @@
 package model.conteudo;
 
-import model.avaliacao.Avaliacao;
-
 import java.time.LocalDate;
-import java.util.List;
 
 public class Filme extends Conteudo{
     private int duracaoEmMinutos;
