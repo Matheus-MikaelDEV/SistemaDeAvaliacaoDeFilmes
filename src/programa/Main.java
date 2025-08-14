@@ -50,11 +50,13 @@ public class Main {
                                         sistema.listarUsuarios();
                                         break;
                                     case 2:
+                                        sistema.removerUsuarioPorNome();
                                         break;
                                     case 3:
                                         sistema.addConteudo();
                                         break;
                                     case 4:
+                                        sistema.removerConteudoPorNome();
                                         break;
                                     case 5:
                                         System.out.println("Saindo...");
@@ -68,7 +70,7 @@ public class Main {
                         } else if (sistema.getUsuarioLogado().isAdmin() == false) {
                             do {
                                 try {
-                                    System.out.print("1 - Fazer Avaliação\n2 - Listar Avaliações\n3 - Listar Todos os Filmes com Avaliações\n4 - Sair\nEscolha: ");
+                                    System.out.print("1 - Fazer Avaliação\n2 - Listar Avaliações com seu Email\n3 - Listar Todos os Filmes com Avaliações\n4 - Sair\nEscolha: ");
                                     option2 = sc.nextInt();
                                 } catch (InputMismatchException e) {
                                     e.printStackTrace();
@@ -81,6 +83,7 @@ public class Main {
                                         sistema.addAvaliacao();
                                         break;
                                     case 2:
+                                        sistema.listarAvaliacoesComEmailDoUsuarioLogado();
                                         break;
                                     case 3:
                                         sistema.listarTudo();
@@ -91,9 +94,8 @@ public class Main {
                                     default:
                                         System.out.println("Opção inválida!");
                                         break;
-                                }
-                                }
-                                while (option2 != 4);
+                                    }
+                                } while (option2 != 4);
                             }
                     }
 
